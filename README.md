@@ -6,6 +6,21 @@
 - 2024 건국대학교 현대미술학과 졸업전시 디지털세미나2 (2학기 신개설 계정)
 - **리포지토리 이름**: `<Kuca-B.F.A>` - 디지털세미나2 졸업전시 작업백업용
 
+## Environment Setup Checklist
+
+- [ ] **Python 설치 확인**
+  - [ ] Python 최신 버전 다운로드
+  - [ ] 설치 과정에서 "Add Python to PATH" 옵션 체크
+  - [ ] **"Install Now"** 버튼 클릭
+
+- [ ] **pip 설치**
+  - [ ] get-pip.py 파일 다운로드
+  - [ ] 관리자 권한으로 명령 프롬프트 열기
+  - [ ] `python get-pip.py` 명령어 실행
+
+- [ ] **elevenlabs 패키지 설치**
+  - [ ] `pip install elevenlabs` 명령어 실행
+
 ## Process Note
 
 ### 1. 새로운 리포지토리 생성
