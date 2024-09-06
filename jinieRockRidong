@@ -1,0 +1,56 @@
+#### 뤼튼과 작업한 Jinie Rock
+
+# 인터랙티브 미디어 아트 프로젝트
+
+## 개요
+본 프로젝트는 ElevenLabs API를 사용하여 관객이 입력한 문장을 음성으로 출력하는 인터랙티브 미디어 아트를 구상하고 있습니다.
+
+## 요구 사항
+- **API 키**: ElevenLabs에서 발급받은 API 키
+- **Python**: Python이 설치되어 있어야 함
+- **Requests 라이브러리**: 아래 명령어로 설치
+  ```bash
+  pip install requests
+  '''
+
+## 코드예제
+
+코드 예제
+다음은 관객의 입력을 음성으로 변환하는 Python 코드입니다.
+
+'''python
+import requests
+
+def text_to_speech(api_key, text):
+    url = "https://api.elevenlabs.io/v1/text-to-speech"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "text": text,
+        "voice": "your_voice_id"  # 원하는 목소리 ID로 변경
+    }
+    response = requests.post(url, headers=headers, json=data)
+    
+    if response.status_code == 200:
+        with open("output.wav", "wb") as f:
+            f.write(response.content)
+        print("음성 파일이 생성되었습니다.")
+    else:
+        print("오류 발생:", response.status_code, response.text)
+
+if __name__ == "__main__":
+    api_key = "YOUR_API_KEY"  # 여기에 API 키 입력
+    user_input = input("관객이 입력한 문장을 입력하세요: ")
+    text_to_speech(api_key, user_input)
+'''
+
+### 코드 설명
+
+-text_to_speech: API를 호출하여 텍스트를 음성으로 변환하는 함수입니다.
+-사용자 입력: 관객이 입력한 문장을 받아 음성으로 변환합니다.
+-파일 저장: 변환된 음성을 output.wav 파일로 저장합니다.
+
+
+
