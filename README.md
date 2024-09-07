@@ -6,7 +6,27 @@
 - 2024 건국대학교 현대미술학과 졸업전시 디지털세미나2 (2학기 신개설 계정)
 - **리포지토리 이름**: <Kuca-B.F.A> - 디지털세미나2 졸업전시 작업백업용
 
+## ERROR List
+
+- [ ] **tkDesigner 설치 시 Pillow error**
+
+1. 가상 환경 설정: 가상 환경을 만들고 그 안에 필요한 패키지를 설치하면 충돌을 피할 수 있습니다.
+
+'''bash
+python -m venv myenv
+myenv\Scripts\activate
+pip install Pillow
+'''
+
+
 ## Environment Setup Checklist
+
+설치 목록 확인코드
+
+'''bash
+pip list
+'''
+
 
 - [ ] **Python 설치 확인**
   - [ ] Python 최신 버전 다운로드
