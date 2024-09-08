@@ -28,10 +28,11 @@ pip list
 '''
 
 
-- [ ] **Python 설치 확인**
-  - [ ] Python 최신 버전 다운로드
+- [ ] **Python 3.9 설치 확인**
+  - [ ] Python 3.9 버전으로 설치해야 wheel for pillow 오류 나지 않음
   - [ ] 설치 과정에서 "Add Python to PATH" 옵션 체크
   - [ ] **"Install Now"** 버튼 클릭
+  - [ ] Python 상위버전을 제거 후에 다시 재설치하는 경우, 시스템 환경변수 path에서 파이썬 경로가 39로 잘 저장되어있는지 확인하고, 상위버전의 경로가 남아있을 시 수정.
 
 - [ ] **pip 설치**
   - [ ] get-pip.py 파일 다운로드
@@ -42,9 +43,10 @@ pip list
   - [ ] pip install elevenlabs 명령어 실행
 
 - [ ] **tkDesigner , figma to tkDesigner 설치**
-  - [ ] pip install tkdesigner 명령어 실행
+  - [ ] pillow 8.4.0 버전으로 설치
+  - [ ] pip install tkdesigner 오류시 -> https://pypi.org/project/tkdesigner/1.0.7/ 직접설치하고, requirements.txt에서 pillow 8.4.0으로 수정하고 저장
   - [ ] gitClone 기능 이용해서 figma to tkd 다운로드 (https://github.com/ParthJadhav/Tkinter-Designer)
-
+ 
 - [ ] **ffmpeg / ffplay / ffprob설치**
   - [ ] 실행시킬 프로젝트 파일이랑 같은 폴더에 있어야 함
   - [ ] 1. ffmpeg 공식 다운로드 홈페이지 : https://ffmpeg.org/download.html
@@ -162,7 +164,21 @@ python get-pip.py
 pip install elevenlabs
 '''
 
+##Figma to TkD
 
+'''cmd
+cd Tkinter-Designer
+'''
+
+'''cmd
+cd gui
+'''
+
+'''cmd
+python gui.py
+'''
+
+보통은 python3 gui.py로 열지만 오류가 있었으므로 특정 버전을 지정해서 오류를 피해가야하는게 아니라면 어지간하면 명령어는 중립적으로 작성.
 
 
 
