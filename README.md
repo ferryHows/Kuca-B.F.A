@@ -1,6 +1,6 @@
 # Kuca-B.F.A
 2024 Kuca B.F.A (Digital Semina2)
-
+widow노트북으로 진행한 과정
 ## CD List
 - GitHub: ferryHows@gmail.com로 로그인
 - 2024 건국대학교 현대미술학과 졸업전시 디지털세미나2 (2학기 신개설 계정)
