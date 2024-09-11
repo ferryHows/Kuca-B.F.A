@@ -2,6 +2,24 @@
 
 ---
 
+elevenLabs api:
+
+sk_c5849cadff17eac7d004c61908735193306bc87cf74fa27d
+
+voice ID:
+
+Kp8K3ZlvqyVzkQBQ2IXJ
+
+model ID:
+
+eleven_multilingual_v2
+
+figma Token Id:
+
+figd_tHLzuUNQNITX3NNmLQdzzA5wq0ksQUkQuvUA_tgP
+
+---
+
 ## Python 3.9.0 install 
 
 - [ ] Remove Python : 파이썬 삭제
@@ -449,9 +467,114 @@ ls -l /Users/seong-uijin/Desktop/kung24/semina2/jinieRockMac
 잘 이동되었다면 터미널뿐 아니라 실제 노트북 화면상의 jinieRockMac 폴더에서 ffmpeg, ffplay, ffprobe 파일을 눈으로 확일할 수 있습니다.
 
 
+---
+가상환경 삭제로 인한 오류 충돌 복구
+:모두 삭제하고 jinieRockMac이라는 가상환경을 지정해서 모두 재설치 .
 
 
+- [ ]Python 삭제:
+
+1. Python 버전 확인: 현재 설치된 Python 버전을 확인합니다.
+
+'''bash
+ls /Library/Frameworks/Python.framework/Versions/
+'''
+
+2. 사용하지 않는 버전 삭제 - 
+
+(1)Python 3.12와 Python 3.9 중 필요 없는 버전을 삭제합니다. 예를 들어, Python 3.12를 삭제하고 싶다면:
+
+'''bash
+sudo rm -rf /Library/Frameworks/Python.framework/Versions/3.12
+sudo rm /usr/local/bin/python3.12
+sudo rm /usr/local/bin/pip3.12
+'''
+
+(2)Python 3.9 버전도 삭제하고 싶다면:
+
+'''bash
+sudo rm -rf /Library/Frameworks/Python.framework/Versions/3.9
+sudo rm /usr/local/bin/python3.9
+sudo rm /usr/local/bin/pip3.9
+'''
+
+3. 심볼릭 링크 정리-Python과 관련된 심볼릭 링크를 삭제하여 시스템에서의 충돌을 방지합니다.
+
+'''bash
+sudo rm /usr/local/bin/python3
+sudo rm /usr/local/bin/pip3
+'''
+
+4. Python 재설치-Python 공식 사이트에서 Python 3.9.0을 다운로드하고 설치합니다.
+설치 후, 설치된 Python 버전을 확인합니다.: 
+
+'''bash
+/Library/Frameworks/Python.framework/Versions/3.9/bin/python3 --version
+'''
+
+5. 가상환경 재설치 - 새로운 Python 3.9.0 버전으로 가상환경을 생성합니다.:
+
+'''bash
+/Library/Frameworks/Python.framework/Versions/3.9/bin/python3 -m venv jinieRockMac
+'''
+
+6.가상환경을 활성화합니다:
+
+'''bash
+source jinieRockMac/bin/activate
+'''
+
+7.필요한 패키지 재설치 - pip가 제대로 설치되었는지 확인합니다.
+
+'''bash
+pip --version
+'''
+
+버전이 너무 낮을시에는 업그레이드
+
+'''bash
+pip install --upgrade pip
+'''
+
+8.ffmpeg 설치 (Homebrew가 설치되어 있는 경우):
+
+'''bash
+brew install ffmpeg
+'''
+
+9. git Clone 이용해서 Figma to Tkinter-Designer 설치
+
+'''bash
+git clone https://github.com/ParthJadhav/Tkinter-Designer.git
+'''
+
+10.requirements.txt 파일을 직접 수정해서 Pillow의 버전을 8.4.0으로 설정하는 방법은 다음과 같습니다
+
+(1)-requirements.txt 파일 열기:
+
+'''bash
+nano requirements.txt
+'''
+
+(2)Pillow 버전 수정하기: 파일에서 Pillow 항목을 찾고, 다음과 같이 수정합니다:
+
+'''makefile
+Pillow==8.4.0
+'''
+
+(3)변경 사항 저장 및 파일 닫기:
+
+nano에서는 Ctrl + X를 누른 후, Y를 눌러 저장하고 Enter를 눌러 종료합니다.
+다른 편집기에서는 저장 후 파일을 닫습니다.
+
+(4)종속성 다시 설치하기: requirements.txt를 수정한 후, 종속성을 다시 설치합니다:
+
+'''bash
+pip install -r requirements.txt
+'''\
+이제 Pillow가 8.4.0으로 설정되었으며, tkdesigner가 정상적으로 작동할 것입니다.
 
 
+혹은 Tkinter-Designer 폴더의 requirements.txt 파일 찾아서 수정하고 저장. (제일빠름. 이 방식으로 다시 깔았음 2024.09.09)
 
-
+----
