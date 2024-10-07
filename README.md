@@ -26,7 +26,7 @@ pip install Pillow
 '''bash
 pip list
 '''
-
+- [ ] **Git 설치
 
 - [ ] **Python 3.9 설치 확인**
   - [ ] Python 3.9 버전으로 설치해야 wheel for pillow 오류 나지 않음
