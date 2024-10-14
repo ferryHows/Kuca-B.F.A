@@ -1,5 +1,10 @@
+#wishRock_sizeTest.py의 업그레이드 버전
+
+#씬 17 오류 해결에 집중하기 위해 씬 9 기능은 삭제한 상태
 #씬 17에서 text input box가 tk의 위젯으로 나타나는 오류가 해결되지 않음
+
 #wishRock_3.py
+
 import tkinter as tk
 from tkinter import PhotoImage, Entry, Tk, Canvas, Text, Button, font
 from elevenlabs import play

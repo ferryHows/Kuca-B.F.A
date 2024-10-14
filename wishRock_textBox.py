@@ -1,11 +1,3 @@
-#wishRock_boxAndButton_look.py의 업그레이드 버전
-
-#씬 17의 최초 작동 30초간 비활동이 감지되면 씬 1로 리셋되는 기능이 추가됨
-#하지만 타이머가 한번만 작동되어서 관객이 비활동을 시작 한 후에 30초 안에
-#추가 활동을 할 시에는 추가 활동이 감지 되지 않아서 두번째 문장 입력이나 두번째 목소리 출력중에
-#씬 1로 리셋되어버리는 오류가 있음
-#wishRock_7.py
-
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
 from elevenlabs import play
@@ -13,6 +5,7 @@ from elevenlabs.client import ElevenLabs
 from pathlib import Path
 from PIL import Image, ImageTk  # Pillow 라이브러리 사용
 
+#text inpuyt box 안나옴
 entry_1 = None
 generate_button = None
 voice_generated = False  # 목소리 생성 여부를 나타내는 변수
@@ -38,6 +31,8 @@ def generate_voice():
 # 비활동 타이머 함수
 def start_inactivity_timer():
     global inactivity_timer
+    if inactivity_timer is not None:  # 기존 타이머가 있을 경우 취소
+        window.after_cancel(inactivity_timer)
     inactivity_timer = window.after(30000, reset_to_scene_1)  # 30초 후 scene_1로 리셋
 
 # 비활동 상태를 감지하고 타이머 리셋
@@ -88,7 +83,7 @@ def create_input_text_button():
     # Text 위젯 생성 (입력 박스)
     entry_1 = Text(
         bd=2,
-        bg="#D0A6A7",  # 텍스트 박스의 배경색
+        bg="rgba(196, 170, 166, 0.52)",  # 텍스트 박스의 배경색
         fg="#3D2A2D",  # 텍스트 색
         highlightthickness=0,
         wrap='word',  # 단어 단위로 줄 바꿈
@@ -97,6 +92,10 @@ def create_input_text_button():
         padx=10,  # 좌우 내부 여백
         pady=50   # 위아래 내부 여백 (중앙을 맞추기 위해 추가)
     )
+    
+    # Border-radius 스타일 적용
+    entry_1.config(insertborderwidth=24)  # 모서리 둥글게
+    
     entry_1.place(
         relx=0.5,  # X 중심 위치
         rely=0.4,  # Y 위치
@@ -137,16 +136,6 @@ def create_input_text_button():
         width=875.0,
         height=44.0
     )
-
-    # 버튼에 대한 hover 효과
-    def on_enter(e):
-        generate_button['background'] = '#FFC300'  # 마우스 오버 시 색상 변경
-
-    def on_leave(e):
-        generate_button['background'] = '#E7BCBF'  # 마우스 아웃 시 원래 색상으로 돌아가기
-
-    generate_button.bind("<Enter>", on_enter)
-    generate_button.bind("<Leave>", on_leave)
 
 # 이미지 로드 및 리사이즈 함수
 def load_scene(scene_name):

@@ -1,10 +1,18 @@
-#wishRock_boxAndButton_look.py의 업그레이드 버전
+#wishRock_betterLoop.py의 업그레이드 버전
 
-#씬 17의 최초 작동 30초간 비활동이 감지되면 씬 1로 리셋되는 기능이 추가됨
-#하지만 타이머가 한번만 작동되어서 관객이 비활동을 시작 한 후에 30초 안에
-#추가 활동을 할 시에는 추가 활동이 감지 되지 않아서 두번째 문장 입력이나 두번째 목소리 출력중에
-#씬 1로 리셋되어버리는 오류가 있음
-#wishRock_7.py
+#betterLoop.py에서는 관객의 꿈 인풋값을 받지 못하는 오류가 있었음
+#next_button이 설정된 위치를 벗어나는 오류가 있으나 꿈 인풋 관련 오류는 해결됨
+#꿈을 입력한 후에 버튼을 눌러야지만  씬 9으로 넘어감
+
+# scene_8에서 scene_9으로 넘어갈 때 next_button이 사라지지않는 오류를 해결했으나,
+#next_button의 위치값이 작용을 안하는 오류가 있음
+# next_button을 사라지게 하기 위해 작성한 코드 중에서
+# 실제로 작동되는 코드와 불필요해서 삭제 가능한 코드를 구분 못 하겠음.
+# 교수님 도움 필요.
+# if next_button()
+#    next_button.place_forget()으로 사라지게 했으나 이 코드를 여기저기 남발해둔 상태.
+
+#wishRock_9.py
 
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
@@ -14,9 +22,11 @@ from pathlib import Path
 from PIL import Image, ImageTk  # Pillow 라이브러리 사용
 
 entry_1 = None
+entry_8 = None
 generate_button = None
 voice_generated = False  # 목소리 생성 여부를 나타내는 변수
 inactivity_timer = None  # 비활동 타이머
+next_button = None
 
 client = ElevenLabs(
     api_key="sk_c4e012b0f5bca4111c1ee2fb1db327a581e2a3475150f5ee",  # Defaults to ELEVEN_API_KEY
@@ -38,11 +48,13 @@ def generate_voice():
 # 비활동 타이머 함수
 def start_inactivity_timer():
     global inactivity_timer
+    if inactivity_timer is not None:  # 기존 타이머가 있을 경우 취소
+        window.after_cancel(inactivity_timer)
     inactivity_timer = window.after(30000, reset_to_scene_1)  # 30초 후 scene_1로 리셋
 
 # 비활동 상태를 감지하고 타이머 리셋
 def reset_to_scene_1():
-    global scene_num, voice_generated, entry_1, generate_button
+    global scene_num, voice_generated, entry_1, generate_button, entry_8, next_button
     if voice_generated:  # 목소리가 생성된 경우에만 리셋
         scene_num = 1  # scene_1으로 돌아감
         load_scene(f"scene_{scene_num}.png")  # 첫 장면 로드
@@ -53,6 +65,10 @@ def reset_to_scene_1():
             entry_1.place_forget()
         if generate_button:
             generate_button.place_forget()
+        if entry_8:
+            entry_8.place_forget()
+        if next_button:
+            next_button.place_forget()
 
 # Tkinter 윈도우 설정
 window = tk.Tk()
@@ -82,6 +98,7 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\yesju\OneDrive\바탕 화면\wishRoc
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+#씬 17 기능
 def create_input_text_button():
     global canvas, entry_1, generate_button
 
@@ -137,16 +154,61 @@ def create_input_text_button():
         width=875.0,
         height=44.0
     )
+#씬 8 기능
+def create_dream_input_text_button():
+    global canvas, entry_8, scene_num, next_button
+    if scene_num ==8:
+    # Text 위젯 생성 (관객의 꿈 입력 박스)
+        entry_8 = Text(
+            bd=2,
+            bg="#D0A6A7",  # 텍스트 박스의 배경색
+            fg="#3D2A2D",  # 텍스트 색
+            highlightthickness=0,
+            wrap='word',  # 단어 단위로 줄 바꿈
+            font=("Arial Rounded MT Bold", 14),  # 다른 폰트 및 볼드체 설정
+            relief="ridge",  # 테두리 스타일
+            padx=10,  # 좌우 내부 여백
+            pady=50   # 위아래 내부 여백 (중앙을 맞추기 위해 추가)
+        )
+        entry_8.place(
+            relx=0.5,  # X 중심 위치
+            rely=0.4,  # Y 위치
+            anchor='center',  # 중앙 기준
+            width=875.0,
+            height=124.0
+        )
+            # 중앙 정렬을 위한 태그 설정
+        entry_8.tag_configure("center", justify='center')
 
-    # 버튼에 대한 hover 효과
-    def on_enter(e):
-        generate_button['background'] = '#FFC300'  # 마우스 오버 시 색상 변경
+    # 사용자가 입력할 때마다 중앙 정렬을 적용하는 함수
+    def center_text(event):
+        entry_8.tag_add("center", "1.0", "end")
 
-    def on_leave(e):
-        generate_button['background'] = '#E7BCBF'  # 마우스 아웃 시 원래 색상으로 돌아가기
+    # Text 위젯에 입력 이벤트 바인딩
+    entry_8.bind("<KeyRelease>", center_text)
 
-    generate_button.bind("<Enter>", on_enter)
-    generate_button.bind("<Leave>", on_leave)
+    # Button 스타일 설정
+    style = ttk.Style()
+    style.configure("TButton",
+                    background="#C2A6A8",  # 버튼 배경색
+                    foreground="#3D2A2D",  # 버튼 글자색
+                    borderwidth=3,
+                    relief="ridge")  # 스타일
+
+    # Button 생성 (꿈 입력 후 다음 씬으로 넘어가기)
+    next_button = ttk.Button(
+        canvas,
+        text="꿈을 들려주세요.",  # 버튼 텍스트
+        style="TButton",  # 버튼 스타일
+        command=next_scene_from_dream  # 버튼 클릭 시 호출될 함수
+    )
+    next_button.place(
+        relx=0.5,  # X 중심 위치
+        rely=0.55,  # Y 위치
+        anchor='center',  # 중앙 기준
+        width=875.0,
+        height=44.0
+    )
 
 # 이미지 로드 및 리사이즈 함수
 def load_scene(scene_name):
@@ -169,24 +231,56 @@ def load_scene(scene_name):
 def resize_image(event):
     load_scene(f"scene_{scene_num}.png")
 
+# 다음 씬으로 넘어가는 함수 (scene_8에서 사용)
+def next_scene_from_dream():
+    global scene_num, entry_8, next_button
+    text = entry_8.get("1.0", "end-1c").strip()  # 입력된 텍스트 가져오기
+
+    if text:  # 텍스트가 비어있지 않은 경우에만 씬 전환
+        scene_num = 9  # scene_9로 변경
+        load_scene(f"scene_{scene_num}.png")  # 다음 장면 로드
+
+        # 입력 박스와 버튼 숨기기
+        entry_8.place_forget()
+        next_button.place_forget() # next_button을 숨김
+    else:
+        # 텍스트 박스가 비어있을 경우 경고 메시지 표시
+        print("꿈을 입력해주세요.")  # 콘솔에 경고 메시지 출력
+        # 필요에 따라 메시지를 GUI로 표시하는 방법을 추가할 수 있습니다.
+
 # 장면 전환 함수
 def next_scene(event=None):
-    global scene_num, entry_1, generate_button
-    if scene_num < 17:
+    global scene_num, entry_1, entry_8, generate_button, next_button
+
+    if 0 <= scene_num < 8 or 9 <= scene_num < 17:
         scene_num += 1
         load_scene(f"scene_{scene_num}.png")  # 다음 장면 로드
         
         # scene_17에서만 텍스트 입력 버튼 생성
         if scene_num == 17:
             create_input_text_button()
+
+        elif scene_num == 8:
+            create_dream_input_text_button() # 꿈 입력 박스 생성
+            next_button.place(relx=0.5, rely=0.8, anchor='center')  # scene_8에서 버튼 보이기
+      
         else:
-            # scene_1로 돌아갈 때 입력 박스와 버튼 숨기기
+            # scene_9에 도달했을 때 다음 버튼 숨기기
+            if scene_num == 9:
+                entry_8.place_forget()
+                next_button.place_forget()  # next_button을 숨김            
+            # scene_17에서 1로 돌아갈 때, scene_8에서 9로 넘어갈 때 입력 박스와 버튼 숨기기
             if entry_1:
                 entry_1.place_forget()
             if generate_button:
                 generate_button.place_forget()
-        
+            if entry_8:
+                entry_8.place_forget()
+            if next_button:
+                next_button.place_forget()
+
         start_inactivity_timer()  # 비활동 타이머 시작
+        
 
 # 첫 장면 로드
 load_scene(scenes[0])

@@ -1,7 +1,7 @@
 # (1) 단순히 씬1~17 장면이 넘어가는 코드 백업본
 # (2) 1)에 대한 구교수님 10/04 수정본
 # (3) 1) + 2)에 대한 성의진 수정본 <- 현재 파일
-
+# wishRock_1.py
 import tkinter as tk
 from tkinter import PhotoImage, Entry, Tk, Canvas, Text, Button, font
 from elevenlabs import play

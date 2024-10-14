@@ -1,3 +1,9 @@
+#wishRock_sizeTest.py의 업그레이드 상태
+
+#씬 17의 기능이 작동하며, 인풋 ui들을 센터로 위치시킨 상태
+
+#wishRock_4.py
+
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
 from elevenlabs import play

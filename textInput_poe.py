@@ -1,30 +1,19 @@
-#wishRock_boxAndButton_look.py의 업그레이드 버전
-
-#씬 17의 최초 작동 30초간 비활동이 감지되면 씬 1로 리셋되는 기능이 추가됨
-#하지만 타이머가 한번만 작동되어서 관객이 비활동을 시작 한 후에 30초 안에
-#추가 활동을 할 시에는 추가 활동이 감지 되지 않아서 두번째 문장 입력이나 두번째 목소리 출력중에
-#씬 1로 리셋되어버리는 오류가 있음
-#wishRock_7.py
-
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
 from elevenlabs import play
 from elevenlabs.client import ElevenLabs
 from pathlib import Path
 from PIL import Image, ImageTk  # Pillow 라이브러리 사용
+import threading
 
 entry_1 = None
 generate_button = None
-voice_generated = False  # 목소리 생성 여부를 나타내는 변수
-inactivity_timer = None  # 비활동 타이머
-
-client = ElevenLabs(
-    api_key="sk_c4e012b0f5bca4111c1ee2fb1db327a581e2a3475150f5ee",  # Defaults to ELEVEN_API_KEY
-)
+idle_timer = None  # 타이머 변수
+client = ElevenLabs(api_key="sk_c4e012b0f5bca4111c1ee2fb1db327a581e2a3475150f5ee")
 
 # 목소리 생성 함수
 def generate_voice():
-    global voice_generated
+    global idle_timer
     text = entry_1.get("1.0", "end-1c")  # 입력된 텍스트 가져오기
     if text.strip():  # 공백이 아닌 경우에만 실행
         audio = client.generate(
@@ -33,26 +22,23 @@ def generate_voice():
             model="eleven_multilingual_v2"
         )
         play(audio)  # 생성된 오디오 재생
-        voice_generated = True  # 목소리가 생성되었음을 표시
+        reset_idle_timer()  # 목소리 출력 시 타이머 리셋
 
-# 비활동 타이머 함수
-def start_inactivity_timer():
-    global inactivity_timer
-    inactivity_timer = window.after(30000, reset_to_scene_1)  # 30초 후 scene_1로 리셋
+# 타이머 리셋 및 시작
+def reset_idle_timer():
+    global idle_timer
+    if idle_timer is not None:
+        idle_timer.cancel()  # 이전 타이머 취소
+    idle_timer = threading.Timer(30.0, go_to_scene_1)  # 30초 후에 go_to_scene_1 호출
+    idle_timer.start()  # 타이머 시작
 
-# 비활동 상태를 감지하고 타이머 리셋
-def reset_to_scene_1():
-    global scene_num, voice_generated, entry_1, generate_button
-    if voice_generated:  # 목소리가 생성된 경우에만 리셋
-        scene_num = 1  # scene_1으로 돌아감
-        load_scene(f"scene_{scene_num}.png")  # 첫 장면 로드
-        voice_generated = False  # 목소리 생성 상태 초기화
-        
-        # scene_1로 돌아가기 전에 입력 박스와 버튼 숨기기
-        if entry_1:
-            entry_1.place_forget()
-        if generate_button:
-            generate_button.place_forget()
+# 장면 1로 돌아가는 함수
+def go_to_scene_1():
+    global scene_num
+    scene_num = 1  # 장면 번호를 1로 리셋
+    load_scene(scenes[0])  # 첫 번째 장면 로드
+    if idle_timer is not None:
+        idle_timer.cancel()  # 타이머 취소
 
 # Tkinter 윈도우 설정
 window = tk.Tk()
@@ -85,10 +71,30 @@ def relative_to_assets(path: str) -> Path:
 def create_input_text_button():
     global canvas, entry_1, generate_button
 
+    # 텍스트 입력 박스 이미지 로드
+    try:
+        img = Image.open(r"C:/Users/yesju/OneDrive/바탕 화면/wishRock/scene_17_textInputBox_slice.png")
+        resized_image = img.resize((875, 124))  # 이미지 크기를 텍스트 박스에 맞게 조정
+        tk_image = ImageTk.PhotoImage(resized_image)
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        return
+
+    # TLabel을 사용하여 이미지 배경 생성
+    text_input_label = ttk.Label(canvas, image=tk_image, background="#FFFFFF")
+    text_input_label.place(
+        relx=0.5,  # X 중심 위치
+        rely=0.4,  # Y 위치
+        anchor='center',  # 중앙 기준
+        width=875.0,
+        height=124.0
+    )
+    text_input_label.image = tk_image  # 이미지 참조 유지
+
     # Text 위젯 생성 (입력 박스)
     entry_1 = Text(
         bd=2,
-        bg="#D0A6A7",  # 텍스트 박스의 배경색
+        bg="",  # 텍스트 박스의 배경색 (투명 배경이 아니므로 이미지와 동일한 색으로 설정)
         fg="#3D2A2D",  # 텍스트 색
         highlightthickness=0,
         wrap='word',  # 단어 단위로 줄 바꿈
@@ -114,6 +120,7 @@ def create_input_text_button():
 
     # Text 위젯에 입력 이벤트 바인딩
     entry_1.bind("<KeyRelease>", center_text)
+
 
     # Button 스타일 설정
     style = ttk.Style()
@@ -146,7 +153,6 @@ def create_input_text_button():
         generate_button['background'] = '#E7BCBF'  # 마우스 아웃 시 원래 색상으로 돌아가기
 
     generate_button.bind("<Enter>", on_enter)
-    generate_button.bind("<Leave>", on_leave)
 
 # 이미지 로드 및 리사이즈 함수
 def load_scene(scene_name):
@@ -171,22 +177,13 @@ def resize_image(event):
 
 # 장면 전환 함수
 def next_scene(event=None):
-    global scene_num, entry_1, generate_button
+    global scene_num
     if scene_num < 17:
         scene_num += 1
         load_scene(f"scene_{scene_num}.png")  # 다음 장면 로드
-        
-        # scene_17에서만 텍스트 입력 버튼 생성
+        # 씬 17에서 텍스트 입력 버튼 생성
         if scene_num == 17:
             create_input_text_button()
-        else:
-            # scene_1로 돌아갈 때 입력 박스와 버튼 숨기기
-            if entry_1:
-                entry_1.place_forget()
-            if generate_button:
-                generate_button.place_forget()
-        
-        start_inactivity_timer()  # 비활동 타이머 시작
 
 # 첫 장면 로드
 load_scene(scenes[0])
@@ -196,10 +193,6 @@ window.bind("<Configure>", resize_image)
 
 # 클릭 시 다음 장면으로 이동
 window.bind("<Button-1>", next_scene)
-
-# 비활동 감지 이벤트 바인딩
-window.bind("<Key>", lambda event: start_inactivity_timer())  # 키 입력 시 타이머 재시작
-window.bind("<Motion>", lambda event: start_inactivity_timer())  # 마우스 움직임 시 타이머 재시작
 
 # 메인 루프 실행
 window.mainloop()

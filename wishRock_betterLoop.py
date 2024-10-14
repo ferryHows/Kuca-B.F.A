@@ -1,3 +1,8 @@
+#wishRock_loop.py의 업그레이드 버전
+
+#비활동 감지 타이머를 리셋하는 기능을 추가했음
+#wishRock_8.py
+
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
 from elevenlabs import play

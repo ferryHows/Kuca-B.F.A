@@ -1,3 +1,7 @@
+#wishRock_scene_17_center.py의 업그레이드 버전
+
+#wishRock_5.py
+
 import tkinter as tk
 from tkinter import PhotoImage, Text, ttk
 from elevenlabs import play
